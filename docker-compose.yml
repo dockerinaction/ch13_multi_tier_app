@@ -15,13 +15,12 @@ services:
           POSTGRES_DB: 'exercise'
 
   api:
-      build:
-        context: .
-        dockerfile: api/Dockerfile
-      links:
-          - postgres
+      image: ${IMAGE_REPOSITORY:-dockerinaction/ch13_multi_tier_app}:api
+      #build:
+      #  context: .
+      #  dockerfile: api/Dockerfile
       ports:
-          - "8080:8080"
+          - "8080:80"
       environment:
         POSTGRES_HOST: 'postgres'
         POSTGRES_PORT: '5432'
@@ -29,6 +28,19 @@ services:
         POSTGRES_PASSWORD: 'mypass27'
         POSTGRES_DB: 'exercise'
         POSTGRES_SSLMODE: 'disable'
+      depends_on:
+        - postgres
+      deploy:
+          replicas: 2
+          update_config:
+              parallelism: 1
+              delay: 5s
+          restart_policy:
+              condition: on-failure
+
+  shell:
+      image: alpine:3.6
+      command: sleep 3600
 
 volumes:
   db-data:
