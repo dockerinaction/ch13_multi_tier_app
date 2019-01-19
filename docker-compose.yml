@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  postgres:
+      image: postgres:9.6.6
+      ports:
+          - "5432" # random available host port will be chosen, same as -P
+      volumes:
+             - db-data:/var/lib/postgresql/data
+      environment:
+          POSTGRES_USER: 'exercise'
+          POSTGRES_PASSWORD: 'mypass27'
+          POSTGRES_DB: 'exercise'
+
+  go:
+      build: .
+      links:
+          - postgres
+      ports:
+          - "8080:8080"
+      environment:
+        POSTGRES_HOST: 'postgres'
+        POSTGRES_PORT: '5432'
+        POSTGRES_USER: 'exercise'
+        POSTGRES_PASSWORD: 'mypass27'
+        POSTGRES_DB: 'exercise'
+        POSTGRES_SSLMODE: 'disable'
+
+volumes:
+  db-data:
