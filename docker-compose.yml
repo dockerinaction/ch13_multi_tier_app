@@ -1,3 +1,4 @@
+# Docker Compose file reference: https://docs.docker.com/compose/compose-file/
 version: '3'
 
 services:
@@ -13,8 +14,10 @@ services:
           POSTGRES_PASSWORD: 'mypass27'
           POSTGRES_DB: 'exercise'
 
-  go:
-      build: .
+  api:
+      build:
+        context: .
+        dockerfile: api/Dockerfile
       links:
           - postgres
       ports:
