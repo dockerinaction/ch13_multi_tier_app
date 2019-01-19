@@ -5,8 +5,8 @@ services:
 
   postgres:
       image: postgres:9.6.6
-      ports:
-          - "5432" # random available host port will be chosen, same as -P
+      expose:
+          - "5432"
       volumes:
              - db-data:/var/lib/postgresql/data
       environment:
@@ -20,7 +20,12 @@ services:
       #  context: .
       #  dockerfile: api/Dockerfile
       ports:
-          - "8080:80"
+        - "8080:80"
+        # https://docs.docker.com/compose/compose-file/#long-syntax-1
+        #- target: 80
+        #  published: 8080
+        #  protocol: tcp
+        #  mode: ingress
       environment:
         POSTGRES_HOST: 'postgres'
         POSTGRES_PORT: '5432'
