@@ -5,8 +5,8 @@ services:
 
   postgres:
       image: postgres:9.6.6
-      expose:
-          - "5432"
+      networks:
+        - private
       volumes:
              - db-data:/var/lib/postgresql/data
       environment:
@@ -19,6 +19,9 @@ services:
       #build:
       #  context: .
       #  dockerfile: api/Dockerfile
+      networks:
+        - public
+        - private
       ports:
         - "8080:80"
         # https://docs.docker.com/compose/compose-file/#long-syntax-1
@@ -46,6 +49,15 @@ services:
   shell:
       image: alpine:3.6
       command: sleep 3600
+      networks:
+        - private
+
+networks:
+  public:
+  private:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
 
 volumes:
   db-data:
