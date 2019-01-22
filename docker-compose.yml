@@ -54,6 +54,9 @@ services:
 
 networks:
   public:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
   private:
     driver: overlay
     driver_opts:
