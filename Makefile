@@ -5,3 +5,6 @@ build:
 
 push:
 	docker push $(IMAGE_REPOSITORY):api
+
+deploy:
+	docker stack deploy --compose-file docker-compose.yml multi-tier-app
