@@ -59,10 +59,9 @@ services:
         POSTGRES_PORT: '5432'
         POSTGRES_USER: 'exercise'
         POSTGRES_DB: 'exercise'
-        POSTGRES_SSLMODE: 'disable'
         POSTGRES_PASSWORD_FILE: '/run/secrets/POSTGRES_PASSWORD'
-        #uncomment to print debug.  note: will print DB connection info to stdout/logs, including password
-        DEBUG: 'true'
+        # uncomment to print debugging statements.  note: will print DB connection info to stdout/logs, including password
+        #DEBUG: 'true'
       depends_on:
         - postgres
       deploy:

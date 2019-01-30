@@ -25,19 +25,17 @@ func main() {
 	log.Println(os.ExpandEnv("Will read postgres password from '${POSTGRES_PASSWORD_FILE}'"))
 
 	postgres_password, err := ioutil.ReadFile(postgres_password_file)
-	//todo: #trim postgres_password
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	connInfo := fmt.Sprintf(
-		"user=%s dbname=%s password=%s host=%s port=%s sslmode=%s",
+		"user=%s dbname=%s password=%s host=%s port=%s sslmode=disable",
 		os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_DB"),
 		strings.TrimSpace(string(postgres_password)),
 		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_SSLMODE"),
 	)
 
 	if os.Getenv("DEBUG") == "true" {
