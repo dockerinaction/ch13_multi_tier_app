@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"strings"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -16,19 +18,32 @@ var (
 )
 
 func main() {
+	log.Println("Starting api server")
+	var err error
+	
+	postgres_password_file := os.Getenv("POSTGRES_PASSWORD_FILE")
+	log.Println(os.ExpandEnv("Will read postgres password from '${POSTGRES_PASSWORD_FILE}'"))
+
+	postgres_password, err := ioutil.ReadFile(postgres_password_file)
+	//todo: #trim postgres_password
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	connInfo := fmt.Sprintf(
 		"user=%s dbname=%s password=%s host=%s port=%s sslmode=%s",
 		os.Getenv("POSTGRES_USER"),
 		os.Getenv("POSTGRES_DB"),
-		os.Getenv("POSTGRES_PASSWORD"),
+		strings.TrimSpace(string(postgres_password)),
 		os.Getenv("POSTGRES_HOST"),
 		os.Getenv("POSTGRES_PORT"),
 		os.Getenv("POSTGRES_SSLMODE"),
 	)
 
-	log.Println(connInfo)
+	if os.Getenv("DEBUG") == "true" {
+		log.Println(connInfo)
+	}
 
-	var err error
 	db, err = sql.Open("postgres", connInfo)
 	if err != nil {
 		log.Fatal(err)
@@ -46,7 +61,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//os.Getenv("INSTANCE_ID")
 	_, err = db.Exec(
 		`create table if not exists counter (
 			id serial primary key,

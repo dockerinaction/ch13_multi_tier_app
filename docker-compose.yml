@@ -1,5 +1,22 @@
 # Docker Compose file reference: https://docs.docker.com/compose/compose-file/
-version: '3'
+version: '3.1'
+
+networks:
+  public:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
+  private:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"
+
+secrets:
+  ch13_multi_tier_app-POSTGRES_PASSWORD: 
+    external: true
+
+volumes:
+  db-data:
 
 services:
 
@@ -9,9 +26,14 @@ services:
         - private
       volumes:
              - db-data:/var/lib/postgresql/data
+      secrets:
+        - source: ch13_multi_tier_app-POSTGRES_PASSWORD
+          target: POSTGRES_PASSWORD
+          # note: world readable because postgres user (uid: 999) needs to read the file
+          mode: 0444
       environment:
           POSTGRES_USER: 'exercise'
-          POSTGRES_PASSWORD: 'mypass27'
+          POSTGRES_PASSWORD_FILE: '/run/secrets/POSTGRES_PASSWORD'
           POSTGRES_DB: 'exercise'
 
   api:
@@ -29,13 +51,19 @@ services:
         #  published: 8080
         #  protocol: tcp
         #  mode: ingress
+      secrets:
+        - source: ch13_multi_tier_app-POSTGRES_PASSWORD
+          target: POSTGRES_PASSWORD
+          mode: 0440
       environment:
         POSTGRES_HOST: 'postgres'
         POSTGRES_PORT: '5432'
         POSTGRES_USER: 'exercise'
-        POSTGRES_PASSWORD: 'mypass27'
         POSTGRES_DB: 'exercise'
         POSTGRES_SSLMODE: 'disable'
+        POSTGRES_PASSWORD_FILE: '/run/secrets/POSTGRES_PASSWORD'
+        #uncomment to print debug.  note: will print DB connection info to stdout/logs, including password
+        DEBUG: 'true'
       depends_on:
         - postgres
       deploy:
@@ -51,16 +79,3 @@ services:
       command: sleep 3600
       networks:
         - private
-
-networks:
-  public:
-    driver: overlay
-    driver_opts:
-      encrypted: "true"
-  private:
-    driver: overlay
-    driver_opts:
-      encrypted: "true"
-
-volumes:
-  db-data:
