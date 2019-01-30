@@ -29,8 +29,10 @@ services:
       secrets:
         - source: ch13_multi_tier_app-POSTGRES_PASSWORD
           target: POSTGRES_PASSWORD
-          # note: world readable because postgres user (uid: 999) needs to read the file
-          mode: 0444
+          # note:  the postgres user (uid: 999) managed by the container needs to read the file
+          uid: '999'
+          gid: '999'
+          mode: 0400
       environment:
           POSTGRES_USER: 'exercise'
           POSTGRES_PASSWORD_FILE: '/run/secrets/POSTGRES_PASSWORD'
@@ -38,9 +40,6 @@ services:
 
   api:
       image: ${IMAGE_REPOSITORY:-dockerinaction/ch13_multi_tier_app}:api
-      #build:
-      #  context: .
-      #  dockerfile: api/Dockerfile
       networks:
         - public
         - private
@@ -54,7 +53,7 @@ services:
       secrets:
         - source: ch13_multi_tier_app-POSTGRES_PASSWORD
           target: POSTGRES_PASSWORD
-          mode: 0440
+          mode: 0400
       environment:
         POSTGRES_HOST: 'postgres'
         POSTGRES_PORT: '5432'
