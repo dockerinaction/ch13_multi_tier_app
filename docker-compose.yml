@@ -66,11 +66,13 @@ services:
         - postgres
       deploy:
           replicas: 2
+          restart_policy:
+              condition: on-failure
+              max_attempts: 10
+              delay: 5s
           update_config:
               parallelism: 1
               delay: 5s
-          restart_policy:
-              condition: on-failure
 
   shell:
       image: alpine:3.6
