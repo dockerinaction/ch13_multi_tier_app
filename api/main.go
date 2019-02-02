@@ -18,7 +18,7 @@ var (
 )
 
 func main() {
-	log.Println("Starting api server")
+	log.Println("Initializing api server")
 	var err error
 	
 	postgres_password_file := os.Getenv("POSTGRES_PASSWORD_FILE")
@@ -70,6 +70,8 @@ func main() {
 
 	http.HandleFunc("/", serveIndex)
 	http.HandleFunc("/counter", serveCounter)
+
+	log.Println("Initialization complete, starting http service")
 	if err := http.ListenAndServe(":80", nil); err != nil {
 		log.Fatal(err)
 	}
