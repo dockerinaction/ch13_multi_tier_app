@@ -74,7 +74,7 @@ func main() {
 	http.HandleFunc("/", serveIndex)
 	http.HandleFunc("/counter", serveCounter)
 
-	log.Println("Initialization complete, starting http service")
+	log.Println("Initialization complete, starting http service on", hostname)
 	if err := http.ListenAndServe(":80", nil); err != nil {
 		log.Fatal(err)
 	}
@@ -84,9 +84,8 @@ func serveIndex(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	resp.Header().Set("Connection", "close")
 	
-	fmt.Fprintln(resp, fmt.Sprintf("Welcome to the API Server (%s)!", hostname))
-	fmt.Fprintln(resp, fmt.Sprintf("Server %s responded at %s", hostname, time.Now()))
-
+	fmt.Fprintln(resp, "Welcome to the API Server!")
+	fmt.Fprintln(resp, fmt.Sprintf("Server %s responded at %s", hostname, time.Now().UTC()))
 }
 
 func serveCounter(resp http.ResponseWriter, req *http.Request) {
