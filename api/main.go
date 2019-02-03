@@ -15,11 +15,14 @@ import (
 
 var (
 	db *sql.DB
+	hostname string
 )
 
 func main() {
-	log.Println("Initializing api server")
 	var err error
+	
+	hostname, err = os.Hostname()
+	log.Println("Initializing api server on", hostname)
 	
 	postgres_password_file := os.Getenv("POSTGRES_PASSWORD_FILE")
 	log.Println(os.ExpandEnv("Will read postgres password from '${POSTGRES_PASSWORD_FILE}'"))
@@ -79,14 +82,18 @@ func main() {
 
 func serveIndex(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Content-Type", "text/plain; charset=utf-8")
-
-	fmt.Fprintln(resp, "Welcome!")
+	resp.Header().Set("Connection", "close")
+	
+	fmt.Fprintln(resp, fmt.Sprintf("Welcome to the API Server (%s)!", hostname))
+	fmt.Fprintln(resp, fmt.Sprintf("Server %s responded at %s", hostname, time.Now()))
 
 }
 
 func serveCounter(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	resp.Header().Set("Connection", "close")
 
+	fmt.Fprintln(resp, "SERVER:", hostname)
 	fmt.Fprintln(resp, "DB_ADDR:", os.Getenv("POSTGRES_HOST"))
 	fmt.Fprintln(resp, "DB_PORT:", os.Getenv("POSTGRES_PORT"))
 
