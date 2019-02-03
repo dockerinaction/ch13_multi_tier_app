@@ -85,16 +85,16 @@ func serveIndex(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Connection", "close")
 	
 	fmt.Fprintln(resp, "Welcome to the API Server!")
-	fmt.Fprintln(resp, fmt.Sprintf("Server %s responded at %s", hostname, time.Now().UTC()))
+	fmt.Fprintln(resp, fmt.Sprintf("Container with id %s responded at %s", hostname, time.Now().UTC()))
 }
 
 func serveCounter(resp http.ResponseWriter, req *http.Request) {
 	resp.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	resp.Header().Set("Connection", "close")
 
-	fmt.Fprintln(resp, "SERVER:", hostname)
-	fmt.Fprintln(resp, "DB_ADDR:", os.Getenv("POSTGRES_HOST"))
-	fmt.Fprintln(resp, "DB_PORT:", os.Getenv("POSTGRES_PORT"))
+	fmt.Fprintln(resp, "Container ID:", hostname)
+	fmt.Fprintln(resp, "POSTGRES_HOST:", os.Getenv("POSTGRES_HOST"))
+	fmt.Fprintln(resp, "POSTGRES_PORT:", os.Getenv("POSTGRES_PORT"))
 
 	_, err := db.Exec("insert into counter(val) values(0)")
 	if err != nil {
