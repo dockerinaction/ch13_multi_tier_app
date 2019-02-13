@@ -1,5 +1,5 @@
 # Docker Compose file reference: https://docs.docker.com/compose/compose-file/
-version: '3.1'
+version: '3.7'
 
 networks:
   public:
@@ -10,6 +10,7 @@ networks:
     driver: overlay
     driver_opts:
       encrypted: "true"
+    attachable: true
 
 secrets:
   ch13_multi_tier_app-POSTGRES_PASSWORD: 
@@ -74,8 +75,3 @@ services:
               parallelism: 1
               delay: 5s
 
-  shell:
-      image: alpine:3.6
-      command: sleep 3600
-      networks:
-        - private
