@@ -38,6 +38,20 @@ services:
           POSTGRES_USER: 'exercise'
           POSTGRES_PASSWORD_FILE: '/run/secrets/POSTGRES_PASSWORD'
           POSTGRES_DB: 'exercise'
+      deploy:
+          replicas: 1
+          update_config:
+            order: 'stop-first'
+          rollback_config:
+            order: 'stop-first'
+          resources:
+            limits:
+              cpus: '1.00'
+              memory: 30M
+            reservations:
+              cpus: '0.25'
+              memory: 30M
+
 
   api:
       image: ${IMAGE_REPOSITORY:-dockerinaction/ch13_multi_tier_app}:api
@@ -74,4 +88,10 @@ services:
           update_config:
               parallelism: 1
               delay: 5s
-
+          resources:
+            limits:
+              cpus: '0.50'
+              memory: 15M
+            reservations:
+              cpus: '0.25'
+              memory: 15M
