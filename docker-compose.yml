@@ -39,6 +39,8 @@ services:
           POSTGRES_PASSWORD_FILE: '/run/secrets/POSTGRES_PASSWORD'
           POSTGRES_DB: 'exercise'
       deploy:
+          # ensure at most a single instance of postgres is running by
+          # deploying a single replica and use 'stop-first' update and rollback strategy
           replicas: 1
           update_config:
             order: 'stop-first'
@@ -47,10 +49,10 @@ services:
           resources:
             limits:
               cpus: '1.00'
-              memory: 30M
+              memory: 50M
             reservations:
               cpus: '0.25'
-              memory: 30M
+              memory: 50M
 
 
   api:
