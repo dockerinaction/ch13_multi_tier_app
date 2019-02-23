@@ -52,6 +52,11 @@ services:
             reservations:
               cpus: '0.25'
               memory: 50M
+          placement:
+            constraints:
+              - node.labels.zone == private
+              - node.hostname == ip-172-31-74-236.ec2.internal
+
 
 
   api:
@@ -96,3 +101,6 @@ services:
             reservations:
               cpus: '0.25'
               memory: 15M
+          placement:
+            constraints:
+              - node.labels.zone == public
