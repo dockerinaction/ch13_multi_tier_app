@@ -5,11 +5,11 @@ networks:
   public:
     driver: overlay
     driver_opts:
-      encrypted: "true"
+      encrypted: 'true'
   private:
     driver: overlay
     driver_opts:
-      encrypted: "true"
+      encrypted: 'true'
     attachable: true
 
 secrets:
@@ -20,7 +20,6 @@ volumes:
   db-data:
 
 services:
-
   postgres:
       image: postgres:9.6.6
       networks:
@@ -61,7 +60,7 @@ services:
         - public
         - private
       ports:
-        - "8080:80"
+        - '8080:80'
         # https://docs.docker.com/compose/compose-file/#long-syntax-1
         #- target: 80
         #  published: 8080
